@@ -28,14 +28,43 @@ public class SignController {
         this.signService = signService;
     }
 
-    @PostMapping("/sign-up")
-    public SignUpResultDto SignUp(@RequestBody SignUpDto signUpDto, String roles){
-        logger.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", signUpDto.getAccount(),
-                signUpDto.getPassword(),roles);
-        SignUpResultDto signUpResultDto = signService.SignUp(signUpDto,roles);
+//    @PostMapping("/sign-up")
+//    public SignUpResultDto SignUp(@RequestBody SignUpDto signUpDto, String roles){
+//        logger.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", signUpDto.getAccount(),
+//                signUpDto.getPassword(),roles);
+//        SignUpResultDto signUpResultDto = signService.SignUp(signUpDto,roles);
+//
+//        return signUpResultDto;
+//    }
+@PostMapping("/sign-up")
+public ResponseEntity<Map<String, Object>> signUp(@RequestBody SignUpDto signUpDto, String roles) {
+    logger.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}",
+            signUpDto.getAccount(), signUpDto.getPassword(), signUpDto.getName(), roles);
 
-        return signUpResultDto;
+    Map<String, Object> response = new HashMap<>();
+
+    // 로그인 아이디 중복 체크
+    if (signService.checkLoginIdDuplicate(signUpDto.getAccount())) {
+        logger.warn("[signUp] 중복된 로그인 아이디: {}", signUpDto.getAccount());
+        response.put("success", false);
+        response.put("message", "로그인 아이디가 중복됩니다.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+
+    // 닉네임 중복 체크
+    if (signService.checkNicknameDuplicate(signUpDto.getNickname())) {
+        logger.warn("[signUp] 중복된 닉네임: {}", signUpDto.getNickname());
+        response.put("success", false);
+        response.put("message", "닉네임이 중복됩니다.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    // 회원가입 처리
+    SignUpResultDto signUpResultDto = signService.SignUp(signUpDto, roles);
+    response.put("data", signUpResultDto);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+}
+
 
     @PostMapping("/sign-in")
     public SignInResultDto SignIn(@RequestParam String account, String password) {

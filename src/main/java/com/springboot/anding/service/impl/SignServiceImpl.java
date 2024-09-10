@@ -33,6 +33,14 @@ public class SignServiceImpl implements SignService {
         this.passwordEncoder = passwordEncoder;
 
     }
+    @Override
+    public boolean checkLoginIdDuplicate(String account) {
+        return userRepository.existsByAccount(account);
+    }
+    @Override
+    public boolean checkNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
 
     @Override
     public SignUpResultDto SignUp(SignUpDto signUpDto, String roles) {
