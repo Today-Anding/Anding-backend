@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResposneFifthteenDto {
-    private Long fifthteen_id;
+public class ResponseFifteenDto {
+    private Long Fifteen_id;
     private String title;
     private String description;
     private String content;
     private String thumbnail;
-    private boolean is_finished;
+
 }

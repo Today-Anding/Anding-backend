@@ -23,8 +23,7 @@ public class Ten {
     private String content;
     @Column(nullable = false) //표지
     private String thumbnail;
-    @Column(nullable = false)
-    private boolean is_finished; //이야기 완결 확인용
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid")

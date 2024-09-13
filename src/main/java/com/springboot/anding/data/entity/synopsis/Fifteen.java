@@ -10,11 +10,11 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "fifthteen")
-public class Fifthteen {
+@Table(name = "Fifteen")
+public class Fifteen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long fifthteen_id;
+    private Long fifteen_id;
     @Column(unique = true, nullable = false) //시놉시스 제목
     private String title;
     @Column(nullable = false) //시놉시스 소개
@@ -23,8 +23,7 @@ public class Fifthteen {
     private String content;
     @Column(nullable = false) //표지
     private String thumbnail;
-    @Column(nullable = false)
-    private boolean is_finished; //이야기 완결 확인용
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid")

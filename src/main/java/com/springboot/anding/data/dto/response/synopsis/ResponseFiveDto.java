@@ -1,8 +1,11 @@
 package com.springboot.anding.data.dto.response.synopsis;
 
+import com.springboot.anding.data.entity.synopsis.Five;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +16,8 @@ public class ResponseFiveDto {
     private String description;
     private String content;
     private String thumbnail;
-    private boolean is_finished;
+
+    private List<Five> items;
+
 
 }

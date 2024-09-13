@@ -1,8 +1,11 @@
 package com.springboot.anding.data.dto.request.synopsis;
 
+import com.springboot.anding.data.entity.synopsis.Five;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -12,4 +15,5 @@ public class RequestFiveDto {
     private String description;
     private String content;
     private String thumbnail;
+
 }
