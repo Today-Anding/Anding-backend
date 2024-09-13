@@ -10,11 +10,11 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ten")
-public class ten {
+@Table(name = "five")
+public class Five {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ten_id;
+    private Long five_id;
     @Column(unique = true, nullable = false) //시놉시스 제목
     private String title;
     @Column(nullable = false) //시놉시스 소개
@@ -30,7 +30,5 @@ public class ten {
     @JoinColumn(name = "uid")
     @ToString.Exclude  //순환참조 방지
     private User user;
-
-
 
 }
