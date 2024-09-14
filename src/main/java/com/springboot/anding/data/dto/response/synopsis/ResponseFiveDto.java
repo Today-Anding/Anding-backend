@@ -17,7 +17,5 @@ public class ResponseFiveDto {
     private String content;
     private String thumbnail;
 
-    private List<Five> items;
-
 
 }
