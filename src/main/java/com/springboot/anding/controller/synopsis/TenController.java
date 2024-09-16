@@ -1,12 +1,8 @@
 package com.springboot.anding.controller.synopsis;
 
-import com.springboot.anding.data.dto.request.synopsis.RequestFiveDto;
 import com.springboot.anding.data.dto.request.synopsis.RequestTenDto;
-import com.springboot.anding.data.dto.response.synopsis.ResponseFiveDto;
-import com.springboot.anding.data.dto.response.synopsis.ResponseFiveListDto;
 import com.springboot.anding.data.dto.response.synopsis.ResponseTenDto;
 import com.springboot.anding.data.dto.response.synopsis.ResponseTenListDto;
-import com.springboot.anding.service.synopsis.FiveService;
 import com.springboot.anding.service.synopsis.TenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

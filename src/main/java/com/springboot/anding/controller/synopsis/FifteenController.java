@@ -1,13 +1,9 @@
 package com.springboot.anding.controller.synopsis;
 
 import com.springboot.anding.data.dto.request.synopsis.RequestFifteenDto;
-import com.springboot.anding.data.dto.request.synopsis.RequestTenDto;
 import com.springboot.anding.data.dto.response.synopsis.ResponseFifteenDto;
 import com.springboot.anding.data.dto.response.synopsis.ResponseFifteenListDto;
-import com.springboot.anding.data.dto.response.synopsis.ResponseTenDto;
-import com.springboot.anding.data.dto.response.synopsis.ResponseTenListDto;
 import com.springboot.anding.service.synopsis.FifteenService;
-import com.springboot.anding.service.synopsis.TenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

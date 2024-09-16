@@ -30,6 +30,4 @@ public class Ten {
     @ToString.Exclude  //순환참조 방지
     private User user;
 
-
-
 }
