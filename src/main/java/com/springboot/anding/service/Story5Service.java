@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface Story5Service {
     ResponseStory5Dto saveStory5(RequestStory5Dto requestStory5Dto,
                                  HttpServletRequest httpServletRequest);
-    ResponseStory5Dto getStory5(Long five_id, Long story5_id)throws Exception;
+    ResponseStory5Dto getStory5(Long fiveId, int position)throws Exception;
     void deleteStory5(Long story5_id,HttpServletRequest httpServletRequest)throws Exception;
     long countStory5ForSynopsis(Long five_id, HttpServletRequest httpServletRequest);
 

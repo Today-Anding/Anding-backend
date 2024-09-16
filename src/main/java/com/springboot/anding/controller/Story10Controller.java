@@ -37,6 +37,12 @@ public class Story10Controller {
         ResponseStory10Dto selectedStory10Dto = story10Service.getStory10(ten_id,story10_id);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory10Dto);
     }
+    @DeleteMapping("/deleteStory10")
+    public void deleteStory10(@RequestParam(value = "story10_id",required = true) Long story10_id,
+                             HttpServletRequest httpServletRequest) throws Exception {
+        story10Service.deleteStory10(story10_id,httpServletRequest);
+        LOGGER.info("[deleteStory10] 중편 스토리를 삭제를 완료하였습니다.  , story10_id: {}", story10_id);
+    }
 
     @GetMapping("/countStory10/{ten_id}")
     public ResponseEntity<String> countStory10ForSynopsis(@PathVariable Long ten_id,

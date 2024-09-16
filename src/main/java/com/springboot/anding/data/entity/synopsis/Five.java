@@ -30,6 +30,7 @@ public class Five {
     @Column(nullable = false)
     private boolean finished;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid")
     @ToString.Exclude  //순환참조 방지

@@ -1,9 +1,7 @@
 package com.springboot.anding.controller;
 
 import com.springboot.anding.data.dto.request.RequestStory15Dto;
-import com.springboot.anding.data.dto.request.RequestStory5Dto;
 import com.springboot.anding.data.dto.response.ResponseStory15Dto;
-import com.springboot.anding.data.dto.response.ResponseStory5Dto;
 import com.springboot.anding.service.Story15Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,12 @@ public class Story15Controller {
                                                        @PathVariable Long story15_id) throws Exception {
         ResponseStory15Dto selectedStory15Dto = story15Service.getStory15(fifteen_id,story15_id);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory15Dto);
+    }
+    @DeleteMapping("/deleteStory15")
+    public void deleteStory15(@RequestParam(value = "story15_id",required = true) Long story15_id,
+                             HttpServletRequest httpServletRequest) throws Exception {
+        story15Service.deleteStory15(story15_id,httpServletRequest);
+        LOGGER.info("[deleteStory15] 장편 스토리를 삭제를 완료하였습니다.  , story15_id: {}", story15_id);
     }
 
     @GetMapping("/countStory15/{fifteen_id}")

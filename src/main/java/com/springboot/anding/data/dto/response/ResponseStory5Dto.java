@@ -11,4 +11,6 @@ public class ResponseStory5Dto {
     private Long story5_id;
     private String content;
     private String author;
+    private String message;
+
 }

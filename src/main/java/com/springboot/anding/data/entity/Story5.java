@@ -16,6 +16,10 @@ public class Story5 {
     @Column(unique = true, nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int position = 0;
+
+
     @ManyToOne
     @JoinColumn(name="uid")
     @ToString.Exclude  //순환참조 방지
