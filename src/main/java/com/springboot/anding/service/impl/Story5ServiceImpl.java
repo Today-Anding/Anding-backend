@@ -117,6 +117,6 @@ public class Story5ServiceImpl implements Story5Service {
         long count = story5Repository.countByFive(five);
 
         // 기본값을 1로 설정
-        return Math.max(count, 1L);
+        return count+1;
     }
 }
