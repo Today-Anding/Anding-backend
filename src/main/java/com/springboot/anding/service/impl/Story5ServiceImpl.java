@@ -43,6 +43,14 @@ public class Story5ServiceImpl implements Story5Service {
         LOGGER.info("[saveStory5] saved story5Id : {}", savedStory5.getStory5_id());
         LOGGER.info("[saveStory5] saved uId : {}", savedStory5.getUser().getUid());
         LOGGER.info("[saveStory5] saved five_id : {}", savedStory5.getFive().getFive_id());
+        LOGGER.info("[saveStory5] Number of Story5 for Five: {}", five.getStories().size());
+
+
+        if (five.getStories().size() >= 4) {
+            five.setFinished(true); // finished를 true로 변경
+            fiveRepository.save(five); // 변경된 Five 엔티티 저장
+            LOGGER.info("[saveStory5] Five is now finished: {}", five.isFinished());
+        }
 
         ResponseStory5Dto responseStory5Dto = new ResponseStory5Dto();
         responseStory5Dto.setStory5_id(savedStory5.getStory5_id());

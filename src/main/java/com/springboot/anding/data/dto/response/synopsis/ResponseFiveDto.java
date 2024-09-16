@@ -16,6 +16,7 @@ public class ResponseFiveDto {
     private String description;
     private String content;
     private String thumbnail;
+    private boolean finished;
 
 
 }

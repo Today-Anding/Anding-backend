@@ -53,6 +53,7 @@ public class FiveServiceImpl implements FiveService {
         responseFiveDto.setDescription(savedFive.getDescription());
         responseFiveDto.setContent(savedFive.getContent());
         responseFiveDto.setThumbnail(savedFive.getThumbnail());
+        responseFiveDto.setFinished(savedFive.isFinished());
 
 
         LOGGER.info("[saveFive] 단편 시놉시스 생성완료. account : {}", account);
@@ -70,6 +71,7 @@ public class FiveServiceImpl implements FiveService {
         responseFiveDto.setDescription(five.getDescription());
         responseFiveDto.setContent(five.getContent());
         responseFiveDto.setThumbnail(five.getThumbnail());
+        responseFiveDto.setFinished(five.isFinished());
 
         LOGGER.info("[getFive] 단편 시놉시스 조회 완료. five_id : {}", five_id);
 
@@ -81,7 +83,7 @@ public class FiveServiceImpl implements FiveService {
         ModelMapper mapper = new ModelMapper();
         List<ResponseFiveDto> responseFiveDtoList = new ArrayList<>();
         ResponseFiveListDto responseFiveListDto = new ResponseFiveListDto();
-        List<Five> fiveList = fiveRepository.findAll();
+        List<Five> fiveList = fiveRepository.findByFinishedTrue();
         for (Five five : fiveList){
             ResponseFiveDto responseFiveDto = mapper.map(five,ResponseFiveDto.class);
             responseFiveDtoList.add(responseFiveDto);

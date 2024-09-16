@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestStory5Dto {
-    private Long fiveId; //연결되는 시놉시스 id
+public class RequestStory10Dto {
+    private Long tenId; //연결되는 시놉시스 id
     private String content;
-
 }
