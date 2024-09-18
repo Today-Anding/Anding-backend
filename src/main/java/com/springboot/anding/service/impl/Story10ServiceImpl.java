@@ -3,20 +3,28 @@ package com.springboot.anding.service.impl;
 import com.springboot.anding.config.security.JwtTokenProvider;
 import com.springboot.anding.data.dto.request.RequestStory10Dto;
 import com.springboot.anding.data.dto.response.ResponseStory10Dto;
+import com.springboot.anding.data.dto.response.ResponseStory10ListDto;
 import com.springboot.anding.data.dto.response.ResponseStory5Dto;
+import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.data.entity.Story10;
+import com.springboot.anding.data.entity.Story5;
 import com.springboot.anding.data.entity.User;
+import com.springboot.anding.data.entity.synopsis.Five;
 import com.springboot.anding.data.entity.synopsis.Ten;
 import com.springboot.anding.data.repository.Story10Repository;
 import com.springboot.anding.data.repository.UserRepository;
 import com.springboot.anding.data.repository.synopsis.TenRepository;
 import com.springboot.anding.service.Story10Service;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class Story10ServiceImpl implements Story10Service {
@@ -78,6 +86,51 @@ public class Story10ServiceImpl implements Story10Service {
         responseStory10Dto.setContent(story10.getContent());
         responseStory10Dto.setAuthor(story10.getUser().getNickname());
         return responseStory10Dto;
+    }
+
+    @Override
+    public ResponseStory10ListDto getCompleteStory10List(Long tenId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory10Dto> responseStory10DtoList = new ArrayList<>();
+        ResponseStory10ListDto responseStory10ListDto = new ResponseStory10ListDto();
+
+
+        Ten ten = tenRepository.findById(tenId)
+                .orElseThrow(() -> new Exception("Ten entity not found"));
+
+        List<Story10> completedStories = story10Repository.findByTenAndFinished(ten, true);
+
+        for (Story10 story10 : completedStories) {
+            ResponseStory10Dto responseStory10Dto = mapper.map(story10, ResponseStory10Dto.class);
+            responseStory10Dto.setAuthor(story10.getUser().getNickname());
+            responseStory10DtoList.add(responseStory10Dto);
+        }
+
+        responseStory10ListDto.setItems(responseStory10DtoList);
+        return responseStory10ListDto;
+    }
+
+    @Override
+    public ResponseStory10ListDto getImcompleteStory10List(Long tenId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory10Dto> responseStory10DtoList = new ArrayList<>();
+        ResponseStory10ListDto responseStory10ListDto = new ResponseStory10ListDto();
+
+
+        Ten ten = tenRepository.findById(tenId)
+                .orElseThrow(() -> new Exception("Ten entity not found"));
+
+        List<Story10> incompleteStories = story10Repository.findByTenAndFinished(ten, false);
+
+
+        for (Story10 story10 : incompleteStories) {
+            ResponseStory10Dto responseStory10Dto = mapper.map(story10, ResponseStory10Dto.class);
+            responseStory10Dto.setAuthor(story10.getUser().getNickname());
+            responseStory10DtoList.add(responseStory10Dto);
+        }
+
+        responseStory10ListDto.setItems(responseStory10DtoList);
+        return responseStory10ListDto;
     }
 
     @Override

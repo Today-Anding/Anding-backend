@@ -2,6 +2,8 @@ package com.springboot.anding.controller;
 
 import com.springboot.anding.data.dto.request.RequestStory10Dto;
 import com.springboot.anding.data.dto.response.ResponseStory10Dto;
+import com.springboot.anding.data.dto.response.ResponseStory10ListDto;
+import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.service.Story10Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,22 @@ public class Story10Controller {
                                                        @PathVariable int position) throws Exception {
         ResponseStory10Dto selectedStory10Dto = story10Service.getStory10(ten_id,position);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory10Dto);
+    }
+
+    @GetMapping("/completed/{tenId}")
+    public ResponseEntity<ResponseStory10ListDto> getCompleteStory10List(
+            @PathVariable Long tenId) throws Exception{
+        ResponseStory10ListDto selectedStory10DtoList = story10Service.getCompleteStory10List(tenId);
+        return ResponseEntity.status(HttpStatus.OK).body(selectedStory10DtoList);
+
+    }
+
+    @GetMapping("/incomplete/{tenId}")
+    public ResponseEntity<ResponseStory10ListDto> getIncompleteStory10List(
+            @PathVariable Long tenId) throws Exception{
+        ResponseStory10ListDto selectedStory10DtoList = story10Service.getImcompleteStory10List(tenId);
+        return  ResponseEntity.status(HttpStatus.OK).body(selectedStory10DtoList);
+
     }
     @DeleteMapping("/deleteStory10")
     public void deleteStory10(@RequestParam(value = "story10_id",required = true) Long story10_id,
