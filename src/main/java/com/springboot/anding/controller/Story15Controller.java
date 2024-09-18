@@ -1,7 +1,9 @@
 package com.springboot.anding.controller;
 
 import com.springboot.anding.data.dto.request.RequestStory15Dto;
+import com.springboot.anding.data.dto.response.ResponseStory10ListDto;
 import com.springboot.anding.data.dto.response.ResponseStory15Dto;
+import com.springboot.anding.data.dto.response.ResponseStory15ListDto;
 import com.springboot.anding.service.Story15Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/story10")
+@RequestMapping("/api/v1/story15")
 public class Story15Controller {
 
     private final Story15Service story15Service;
@@ -38,6 +40,22 @@ public class Story15Controller {
                                                        @PathVariable int position) throws Exception {
         ResponseStory15Dto selectedStory15Dto = story15Service.getStory15(fifteen_id,position);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory15Dto);
+    }
+
+    @GetMapping("/completed/{fifteenId}")
+    public ResponseEntity<ResponseStory15ListDto> getCompleteStory15List(
+            @PathVariable Long fifteenId) throws Exception{
+        ResponseStory15ListDto selectedStory15DtoList = story15Service.getCompleteStory15List(fifteenId);
+        return ResponseEntity.status(HttpStatus.OK).body(selectedStory15DtoList);
+
+    }
+
+    @GetMapping("/incomplete/{fifteenId}")
+    public ResponseEntity<ResponseStory15ListDto> getIncompleteStory15List(
+            @PathVariable Long fifteenId) throws Exception{
+        ResponseStory15ListDto selectedStory15DtoList = story15Service.getImcompleteStory15List(fifteenId);
+        return  ResponseEntity.status(HttpStatus.OK).body(selectedStory15DtoList);
+
     }
     @DeleteMapping("/deleteStory15")
     public void deleteStory15(@RequestParam(value = "story15_id",required = true) Long story15_id,

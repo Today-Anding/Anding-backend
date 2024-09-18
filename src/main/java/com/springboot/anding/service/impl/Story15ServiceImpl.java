@@ -3,20 +3,27 @@ package com.springboot.anding.service.impl;
 import com.springboot.anding.config.security.JwtTokenProvider;
 import com.springboot.anding.data.dto.request.RequestStory15Dto;
 import com.springboot.anding.data.dto.response.ResponseStory15Dto;
+import com.springboot.anding.data.dto.response.ResponseStory15ListDto;
 import com.springboot.anding.data.dto.response.ResponseStory5Dto;
+import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.data.entity.Story15;
+import com.springboot.anding.data.entity.Story5;
 import com.springboot.anding.data.entity.User;
 import com.springboot.anding.data.entity.synopsis.Fifteen;
+import com.springboot.anding.data.entity.synopsis.Five;
 import com.springboot.anding.data.repository.Story15Repository;
 import com.springboot.anding.data.repository.UserRepository;
 import com.springboot.anding.data.repository.synopsis.FifteenRepository;
 import com.springboot.anding.service.Story15Service;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +85,50 @@ public class Story15ServiceImpl implements Story15Service {
         responseStory15Dto.setContent(story15.getContent());
         responseStory15Dto.setAuthor(story15.getUser().getNickname());
         return responseStory15Dto;
+    }
+    @Override
+    public ResponseStory15ListDto getCompleteStory15List(Long fifteenId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory15Dto> responseStory15DtoList = new ArrayList<>();
+        ResponseStory15ListDto responseStory15ListDto = new ResponseStory15ListDto();
+
+
+        Fifteen fifteen = fifteenRepository.findById(fifteenId)
+                .orElseThrow(() -> new Exception("Fifteen entity not found"));
+
+        List<Story15> completedStories = story15Repository.findByFifteenAndFinished(fifteen, true);
+
+        for (Story15 story15 : completedStories) {
+            ResponseStory15Dto responseStory15Dto = mapper.map(story15, ResponseStory15Dto.class);
+            responseStory15Dto.setAuthor(story15.getUser().getNickname());
+            responseStory15DtoList.add(responseStory15Dto);
+        }
+
+        responseStory15ListDto.setItems(responseStory15DtoList);
+        return responseStory15ListDto;
+    }
+
+    @Override
+    public ResponseStory15ListDto getImcompleteStory15List(Long fifteenId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory15Dto> responseStory15DtoList = new ArrayList<>();
+        ResponseStory15ListDto responseStory15ListDto = new ResponseStory15ListDto();
+
+
+        Fifteen fifteen = fifteenRepository.findById(fifteenId)
+                .orElseThrow(() -> new Exception("Fifteen entity not found"));
+
+        List<Story15> incompleteStories = story15Repository.findByFifteenAndFinished(fifteen, false);
+
+
+        for (Story15 story15 : incompleteStories) {
+            ResponseStory15Dto responseStory15Dto = mapper.map(story15, ResponseStory15Dto.class);
+            responseStory15Dto.setAuthor(story15.getUser().getNickname());
+            responseStory15DtoList.add(responseStory15Dto);
+        }
+
+        responseStory15ListDto.setItems(responseStory15DtoList);
+        return responseStory15ListDto;
     }
 
     @Override
