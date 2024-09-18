@@ -82,7 +82,7 @@ public class TenServiceImpl implements TenService {
         ModelMapper mapper = new ModelMapper();
         List<ResponseTenDto> responseTenDtoList = new ArrayList<>();
         ResponseTenListDto responseTenListDto = new ResponseTenListDto();
-        List<Ten> tenList = tenRepository.findAll();
+        List<Ten> tenList = tenRepository.findByFinishedTrue();
         for (Ten ten : tenList){
             ResponseTenDto responseTenDto = mapper.map(ten,ResponseTenDto.class);
             responseTenDtoList.add(responseTenDto);

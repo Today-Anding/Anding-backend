@@ -17,6 +17,8 @@ public class Story10 {
     private Long story10_id;
     @Column(unique = true, nullable = false)
     private String content;
+    @Column(nullable = false)
+    private int position;
 
     @ManyToOne
     @JoinColumn(name="uid")
