@@ -3,6 +3,7 @@ package com.springboot.anding.service.impl;
 import com.springboot.anding.config.security.JwtTokenProvider;
 import com.springboot.anding.data.dto.request.RequestStory5Dto;
 import com.springboot.anding.data.dto.response.ResponseStory5Dto;
+import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.data.entity.Story5;
 import com.springboot.anding.data.entity.User;
 import com.springboot.anding.data.entity.synopsis.Five;
@@ -10,13 +11,16 @@ import com.springboot.anding.data.repository.Story5Repository;
 import com.springboot.anding.data.repository.UserRepository;
 import com.springboot.anding.data.repository.synopsis.FiveRepository;
 import com.springboot.anding.service.Story5Service;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class Story5ServiceImpl implements Story5Service {
@@ -90,6 +94,51 @@ public class Story5ServiceImpl implements Story5Service {
         responseStory5Dto.setContent(story5.getContent());
         responseStory5Dto.setAuthor(story5.getUser().getNickname());
         return responseStory5Dto;
+    }
+
+    @Override
+    public ResponseStory5ListDto getCompleteStory5List(Long fiveId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory5Dto> responseStory5DtoList = new ArrayList<>();
+        ResponseStory5ListDto responseStory5ListDto = new ResponseStory5ListDto();
+
+
+        Five five = fiveRepository.findById(fiveId)
+                .orElseThrow(() -> new Exception("Five entity not found"));
+
+        List<Story5> completedStories = story5Repository.findByFiveAndFinished(five, true);
+
+        for (Story5 story5 : completedStories) {
+            ResponseStory5Dto responseStory5Dto = mapper.map(story5, ResponseStory5Dto.class);
+            responseStory5Dto.setAuthor(story5.getUser().getNickname());
+            responseStory5DtoList.add(responseStory5Dto);
+        }
+
+        responseStory5ListDto.setItems(responseStory5DtoList);
+        return responseStory5ListDto;
+    }
+
+    @Override
+    public ResponseStory5ListDto getImcompleteStory5List(Long fiveId) throws Exception {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStory5Dto> responseStory5DtoList = new ArrayList<>();
+        ResponseStory5ListDto responseStory5ListDto = new ResponseStory5ListDto();
+
+
+        Five five = fiveRepository.findById(fiveId)
+                .orElseThrow(() -> new Exception("Five entity not found"));
+
+        List<Story5> incompleteStories = story5Repository.findByFiveAndFinished(five, false);
+
+
+        for (Story5 story5 : incompleteStories) {
+            ResponseStory5Dto responseStory5Dto = mapper.map(story5, ResponseStory5Dto.class);
+            responseStory5Dto.setAuthor(story5.getUser().getNickname());
+            responseStory5DtoList.add(responseStory5Dto);
+        }
+
+        responseStory5ListDto.setItems(responseStory5DtoList);
+        return responseStory5ListDto;
     }
 
     @Override

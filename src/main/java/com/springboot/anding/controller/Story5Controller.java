@@ -2,6 +2,7 @@ package com.springboot.anding.controller;
 
 import com.springboot.anding.data.dto.request.RequestStory5Dto;
 import com.springboot.anding.data.dto.response.ResponseStory5Dto;
+import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.service.Story5Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,22 @@ public class Story5Controller {
                                                        @PathVariable int position) throws Exception {
         ResponseStory5Dto selectedStory5Dto = story5Service.getStory5(fiveId,position);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory5Dto);
+    }
+
+    @GetMapping("/completed/{fiveId}")
+    public ResponseEntity<ResponseStory5ListDto> getCompleteStory5List(
+            @PathVariable Long fiveId) throws Exception{
+        ResponseStory5ListDto selectedStory5DtoList = story5Service.getCompleteStory5List(fiveId);
+        return ResponseEntity.status(HttpStatus.OK).body(selectedStory5DtoList);
+
+    }
+
+    @GetMapping("/incomplete/{fiveId}")
+    public ResponseEntity<ResponseStory5ListDto> getIncompleteStory5List(
+            @PathVariable Long fiveId) throws Exception{
+        ResponseStory5ListDto selectedStory5DtoList = story5Service.getImcompleteStory5List(fiveId);
+        return  ResponseEntity.status(HttpStatus.OK).body(selectedStory5DtoList);
+
     }
 
     @DeleteMapping("/deleteStory5")
