@@ -3,6 +3,7 @@ package com.springboot.anding.service.impl;
 import com.springboot.anding.config.security.JwtTokenProvider;
 import com.springboot.anding.data.dto.request.RequestStory15Dto;
 import com.springboot.anding.data.dto.response.ResponseStory15Dto;
+import com.springboot.anding.data.dto.response.ResponseStory5Dto;
 import com.springboot.anding.data.entity.Story15;
 import com.springboot.anding.data.entity.User;
 import com.springboot.anding.data.entity.synopsis.Fifteen;
@@ -35,27 +36,42 @@ public class Story15ServiceImpl implements Story15Service {
         Fifteen fifteen = fifteenRepository.findById(requestStory15Dto.getFifteenId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 시놉시스를 찾을 수 없습니다."));
 
+        if (fifteen.isFinished()) {
+            ResponseStory15Dto responseStory15Dto = new ResponseStory15Dto();
+            responseStory15Dto.setMessage("이미 완료된 글입니다.");
+            return responseStory15Dto;
+        }
+
+        int position = (int) (story15Repository.countByFifteen(fifteen) + 1);
         Story15 story15 = new Story15();
         story15.setUser(user);
         story15.setFifteen(fifteen);
         story15.setContent(requestStory15Dto.getContent());
+        story15.setPosition(position);
 
         Story15 savedStory15 = story15Repository.save(story15);
-        LOGGER.info("[saveStory5] saved story15Id : {}", savedStory15.getStory15_id());
-        LOGGER.info("[saveStory5] saved uId : {}", savedStory15.getUser().getUid());
-        LOGGER.info("[saveStory5] saved five_id : {}", savedStory15.getFifteen().getFifteen_id());
+        LOGGER.info("[saveStory15] saved story15Id : {}", savedStory15.getStory15_id());
+        LOGGER.info("[saveStory15] saved uId : {}", savedStory15.getUser().getUid());
+        LOGGER.info("[saveStory15] saved fifteen_id : {}", savedStory15.getFifteen().getFifteen_id());
+        LOGGER.info("[saveStory15] Number of Story5 for Fifteen: {}", fifteen.getStories().size());
 
+        if (fifteen.getStories().size() >= 4) {
+            fifteen.setFinished(true); // finished를 true로 변경
+            fifteenRepository.save(fifteen); // 변경된 Fifteen 엔티티 저장
+            LOGGER.info("[saveStory15] Fifteen is now finished: {}", fifteen.isFinished());
+        }
         ResponseStory15Dto responseStory15Dto = new ResponseStory15Dto();
         responseStory15Dto.setStory15_id(savedStory15.getStory15_id());
         responseStory15Dto.setContent(savedStory15.getContent());
         responseStory15Dto.setAuthor(story15.getUser().getNickname());
+        responseStory15Dto.setMessage("스토리추가성공~");
         return responseStory15Dto;
     }
 
     @Override
-    public ResponseStory15Dto getStory15(Long fifteen_id, Long story15_id) throws Exception {
-        Story15 story15 = story15Repository.findByFifteenIdAndStory15Id(fifteen_id,story15_id)
-                .orElseThrow(() -> new Exception("해당하는 Story5를 찾을 수 없습니다."));
+    public ResponseStory15Dto getStory15(Long fifteen_id, int position) throws Exception {
+        Story15 story15 = story15Repository.findByFifteenIdAndPosition(fifteen_id,position)
+                .orElseThrow(() -> new Exception("해당하는 Story15를 찾을 수 없습니다."));
 
         ResponseStory15Dto responseStory15Dto = new ResponseStory15Dto();
         responseStory15Dto.setStory15_id(story15.getStory15_id());
@@ -86,7 +102,8 @@ public class Story15ServiceImpl implements Story15Service {
     public long countStory15ForSynopsis(Long fifteen_id, HttpServletRequest httpServletRequest) {
         Fifteen fifteen = fifteenRepository.findById(fifteen_id)
                 .orElseThrow(() -> new IllegalArgumentException("프롬프트를 찾을 수 없습니다."));
-        return story15Repository.countByFifteen(fifteen);
+        long count = story15Repository.countByFifteen(fifteen);
+        return count+1;
         }
 
 }

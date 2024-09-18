@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/story10")
@@ -31,10 +33,10 @@ public class Story15Controller {
         return ResponseEntity.status(HttpStatus.OK).body(savedStory15Dto);
     }
 
-    @GetMapping(value = "/getStory15/{fifteen_id}/{story15_id}")
+    @GetMapping(value = "/getStory15/{fifteen_id}/{position}")
     public ResponseEntity<ResponseStory15Dto> getStory15(@PathVariable Long fifteen_id,
-                                                       @PathVariable Long story15_id) throws Exception {
-        ResponseStory15Dto selectedStory15Dto = story15Service.getStory15(fifteen_id,story15_id);
+                                                       @PathVariable int position) throws Exception {
+        ResponseStory15Dto selectedStory15Dto = story15Service.getStory15(fifteen_id,position);
         return ResponseEntity.status(HttpStatus.OK).body(selectedStory15Dto);
     }
     @DeleteMapping("/deleteStory15")
@@ -45,14 +47,17 @@ public class Story15Controller {
     }
 
     @GetMapping("/countStory15/{fifteen_id}")
-    public ResponseEntity<String> countStory15ForSynopsis(@PathVariable Long fifteen_id,
-                                                         HttpServletRequest servletRequest) {
+    public ResponseEntity<Map<String, Object>> countStory15ForSynopsis(@PathVariable Long fifteen_id,
+                                                                       HttpServletRequest servletRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             Long count = story15Service.countStory15ForSynopsis(fifteen_id, servletRequest);
-            return ResponseEntity.status(HttpStatus.OK).body("이어진 앤딩(글) 수: " + count); //시놉시스가 1개로 default
+
+            response.put("이어진 앤딩(글) 수", count);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
-            // 시놉시스가 존재하지 않을 때의 메시지 처리
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("시놉시스를 찾을 수 없습니다.");
+            response.put("message", "시놉시스를 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 }

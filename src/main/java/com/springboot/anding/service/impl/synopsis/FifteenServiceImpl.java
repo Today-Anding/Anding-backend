@@ -9,6 +9,7 @@ import com.springboot.anding.data.dto.response.synopsis.ResponseTenDto;
 import com.springboot.anding.data.dto.response.synopsis.ResponseTenListDto;
 import com.springboot.anding.data.entity.User;
 import com.springboot.anding.data.entity.synopsis.Fifteen;
+import com.springboot.anding.data.entity.synopsis.Five;
 import com.springboot.anding.data.entity.synopsis.Ten;
 import com.springboot.anding.data.repository.UserRepository;
 import com.springboot.anding.data.repository.synopsis.FifteenRepository;
@@ -82,7 +83,7 @@ public class FifteenServiceImpl implements FifteenService {
         ModelMapper mapper = new ModelMapper();
         List<ResponseFifteenDto> responseFifteenDtoList = new ArrayList<>();
         ResponseFifteenListDto responseFifteenListDto = new ResponseFifteenListDto();
-        List<Fifteen> fifteenList = fifteenRepository.findAll();
+        List<Fifteen> fifteenList = fifteenRepository.findByFinishedTrue();
         for (Fifteen fifteen : fifteenList){
             ResponseFifteenDto responseFifteenDto = mapper.map(fifteen,ResponseFifteenDto.class);
             responseFifteenDtoList.add(responseFifteenDto);

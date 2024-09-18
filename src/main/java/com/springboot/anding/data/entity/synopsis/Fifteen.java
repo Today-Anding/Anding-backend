@@ -1,9 +1,12 @@
 package com.springboot.anding.data.entity.synopsis;
 
+import com.springboot.anding.data.entity.Story15;
 import com.springboot.anding.data.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,10 +26,15 @@ public class Fifteen {
     private String content;
     @Column(nullable = false) //표지
     private String thumbnail;
+    @Column(nullable = false)
+    private boolean finished;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid")
     @ToString.Exclude  //순환참조 방지
     private User user;
+
+    @OneToMany(mappedBy = "fifteen", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Story15> stories = new ArrayList<>();
 }
