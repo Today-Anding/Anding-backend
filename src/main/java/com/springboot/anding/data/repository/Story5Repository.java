@@ -21,6 +21,9 @@ public interface Story5Repository extends JpaRepository<Story5,Long> {
     @Query("SELECT s FROM Story5 s WHERE s.five = :five AND s.five.finished = :finished")
     List<Story5> findByFiveAndFinished(@Param("five") Five five, @Param("finished") boolean finished);
 
+    @Query(value = "SELECT * FROM story5 WHERE five_id = :fiveId ORDER BY story5_id DESC LIMIT 1", nativeQuery = true)
+    Optional<Story5> findMostRecentStory5ByFiveId(@Param("fiveId") Long fiveId);
+
 
     // @Query("SELECT s FROM Story5 s WHERE s.five.five_id = :five_id AND s.story5_id = :story5_id")
    // Optional<Story5> findByFiveIdAndStory5Id(@Param("five_id") Long five_id, @Param("story5_id") Long story5_id);

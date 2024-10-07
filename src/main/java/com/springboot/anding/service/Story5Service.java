@@ -17,4 +17,6 @@ public interface Story5Service {
     long countStory5ForSynopsis(Long five_id, HttpServletRequest httpServletRequest);
 
 
+    // 새 Story5를 저장하기 전에 비교하고, 연결 여부에 따라 "Yes" 또는 "No" 반환
+    String compareAndReturnResult5(Long fiveId, String newContent);
 }

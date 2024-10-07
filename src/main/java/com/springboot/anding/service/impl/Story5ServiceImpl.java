@@ -1,7 +1,9 @@
 package com.springboot.anding.service.impl;
 
 import com.springboot.anding.config.security.JwtTokenProvider;
+import com.springboot.anding.data.dto.request.RequestChatGPT;
 import com.springboot.anding.data.dto.request.RequestStory5Dto;
+import com.springboot.anding.data.dto.response.ResponseChatGPT;
 import com.springboot.anding.data.dto.response.ResponseStory5Dto;
 import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
 import com.springboot.anding.data.entity.Story5;
@@ -15,12 +17,13 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class Story5ServiceImpl implements Story5Service {
@@ -29,13 +32,21 @@ public class Story5ServiceImpl implements Story5Service {
     private final FiveRepository fiveRepository;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RestTemplate restTemplate;
     @Autowired
-    public Story5ServiceImpl(Story5Repository story5Repository, FiveRepository fiveRepository, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public Story5ServiceImpl(Story5Repository story5Repository, FiveRepository fiveRepository, UserRepository userRepository, JwtTokenProvider jwtTokenProvider, RestTemplate restTemplate) {
         this.story5Repository = story5Repository;
         this.fiveRepository = fiveRepository;
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.restTemplate = restTemplate;
     }
+
+    @Value("${openai.model}")
+    private String model;
+
+    @Value("${openai.api.url}")
+    private String apiURL;
 
     @Override
     public ResponseStory5Dto saveStory5(RequestStory5Dto requestStory5Dto, HttpServletRequest httpServletRequest) {
@@ -167,5 +178,28 @@ public class Story5ServiceImpl implements Story5Service {
 
         // 기본값을 1로 설정
         return count+1;
+    }
+
+
+    @Override
+    public String compareAndReturnResult5(Long fiveId,String newContent) {
+        // 가장 최근의 Story5 가져오기
+        Story5 mostRecentStory5 = story5Repository.findMostRecentStory5ByFiveId(fiveId)
+                .orElseThrow(() -> new IllegalArgumentException("No previous Story5 entities available for comparison"));
+        LOGGER.info("Most recent Story5 content from DB: {}", mostRecentStory5.getContent());
+        // 고정된 질문으로 GPT에게 질의
+        String prompt = String.format("다음 두 텍스트를 소설가의 관점에서 평가해 주세요. " +
+                        "이 두 텍스트는 자연스럽게 연결되나요? " +
+                        "연결이 되면 yes 연결되지않으면 no로 대답해 주세요.\n" +
+                        "텍스트 1: %s\n텍스트 2: %s",
+                mostRecentStory5.getContent(), newContent);
+
+
+        RequestChatGPT request = new RequestChatGPT(model, prompt);
+        ResponseChatGPT response = restTemplate.postForObject(apiURL, request, ResponseChatGPT.class);
+
+        String gptResponse = response.getChoices().get(0).getMessage().getContent().toLowerCase();
+
+        return gptResponse;
     }
 }
