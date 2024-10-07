@@ -18,4 +18,5 @@ public interface Story10Service {
     long countStory10ForSynopsis(Long ten_id, HttpServletRequest httpServletRequest);
 
 
+    String compareAndReturnResult10(Long tenId, String newContent);
 }

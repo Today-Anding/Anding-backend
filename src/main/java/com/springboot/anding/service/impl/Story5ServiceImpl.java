@@ -176,8 +176,8 @@ public class Story5ServiceImpl implements Story5Service {
                 .orElseThrow(() -> new IllegalArgumentException("프롬프트를 찾을 수 없습니다."));
         long count = story5Repository.countByFive(five);
 
-        // 기본값을 1로 설정
-        return count+1;
+
+        return count;
     }
 
 

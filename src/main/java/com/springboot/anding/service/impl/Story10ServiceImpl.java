@@ -1,15 +1,11 @@
 package com.springboot.anding.service.impl;
 
 import com.springboot.anding.config.security.JwtTokenProvider;
+import com.springboot.anding.data.dto.request.RequestChatGPT;
 import com.springboot.anding.data.dto.request.RequestStory10Dto;
-import com.springboot.anding.data.dto.response.ResponseStory10Dto;
-import com.springboot.anding.data.dto.response.ResponseStory10ListDto;
-import com.springboot.anding.data.dto.response.ResponseStory5Dto;
-import com.springboot.anding.data.dto.response.ResponseStory5ListDto;
+import com.springboot.anding.data.dto.response.*;
 import com.springboot.anding.data.entity.Story10;
-import com.springboot.anding.data.entity.Story5;
 import com.springboot.anding.data.entity.User;
-import com.springboot.anding.data.entity.synopsis.Five;
 import com.springboot.anding.data.entity.synopsis.Ten;
 import com.springboot.anding.data.repository.Story10Repository;
 import com.springboot.anding.data.repository.UserRepository;
@@ -19,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -34,6 +32,12 @@ public class Story10ServiceImpl implements Story10Service {
     private final TenRepository tenRepository;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RestTemplate restTemplate;
+    @Value("${openai.model}")
+    private String model;
+
+    @Value("${openai.api.url}")
+    private String apiURL;
     @Override
     public ResponseStory10Dto saveStory10(RequestStory10Dto requestStory10Dto, HttpServletRequest httpServletRequest) {
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
@@ -158,7 +162,30 @@ public class Story10ServiceImpl implements Story10Service {
 
         long count = story10Repository.countByTen(ten);
 
-        return count+1;
+        return count;
+    }
+
+    @Override
+    public String compareAndReturnResult10(Long tenId, String newContent) {
+        // 가장 최근의 Story10 가져오기
+        Story10 mostRecentStory10 = story10Repository.findMostRecentStory10ByTenId(tenId)
+                .orElseThrow(() -> new IllegalArgumentException("No previous Story10 entities available for comparison"));
+        LOGGER.info("Most recent Story10 content from DB: {}", mostRecentStory10.getContent());
+
+        // 고정된 질문으로 GPT에게 질의
+        String prompt = String.format("다음 두 텍스트를 소설가의 관점에서 평가해 주세요. " +
+                        "이 두 텍스트는 자연스럽게 연결되나요? " +
+                        "연결이 되면 yes 연결되지않으면 no로 대답해 주세요.\n" +
+                        "텍스트 1: %s\n텍스트 2: %s",
+                mostRecentStory10.getContent(), newContent);
+
+
+        RequestChatGPT request = new RequestChatGPT(model, prompt);
+        ResponseChatGPT response = restTemplate.postForObject(apiURL, request, ResponseChatGPT.class);
+
+        String gptResponse = response.getChoices().get(0).getMessage().getContent().toLowerCase();
+
+        return gptResponse;
     }
 
 }

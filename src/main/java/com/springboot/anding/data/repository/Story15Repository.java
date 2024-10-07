@@ -21,6 +21,9 @@ public interface Story15Repository extends JpaRepository<Story15,Long> {
     @Query("SELECT s FROM Story15 s WHERE s.fifteen.fifteen_id = :fifteen_id AND s.position = :position")
     Optional<Story15> findByFifteenIdAndPosition(@Param("fifteen_id") Long fifteen_id, @Param("position") int position);
 
+    @Query(value = "SELECT * FROM story15 WHERE fifteen_id = :fifteenId ORDER BY story15_id DESC LIMIT 1", nativeQuery = true)
+    Optional<Story15> findMostRecentStory15ByFifteenId(@Param("fifteenId") Long fifteenId);
+
     //@Query("SELECT s FROM Story15 s WHERE s.fifteen.fifteen_id = :fifteen_id AND s.story15_id = :story15_id")
     //Optional<Story15> findByFifteenIdAndStory15Id(@Param("fifteen_id") Long fifteen_id, @Param("story15_id") Long story15_id);
 
