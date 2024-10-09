@@ -51,7 +51,7 @@ public class StarController {
         }
     }
 
-    @GetMapping("/getTop3RecentStar")
+    @GetMapping("/getTop4RecentStar")
     public ResponseEntity<ResponseStarListDto> getTop4RecentStar(HttpServletRequest httpServletRequest){
         ResponseStarListDto top3List = starService.getTop4RecentStar(httpServletRequest);
         return ResponseEntity.status(HttpStatus.OK).body(top3List);
