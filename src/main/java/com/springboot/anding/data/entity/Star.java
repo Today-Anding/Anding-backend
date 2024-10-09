@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,6 +21,11 @@ public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long star_id;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -2,6 +2,8 @@ package com.springboot.anding.service.impl;
 
 import com.springboot.anding.config.security.JwtTokenProvider;
 import com.springboot.anding.data.dto.request.RequestStarDto;
+import com.springboot.anding.data.dto.response.ResponseStarDto;
+import com.springboot.anding.data.dto.response.ResponseStarListDto;
 import com.springboot.anding.data.entity.*;
 import com.springboot.anding.data.entity.synopsis.Fifteen;
 import com.springboot.anding.data.entity.synopsis.Five;
@@ -11,12 +13,16 @@ import com.springboot.anding.data.repository.synopsis.FifteenRepository;
 import com.springboot.anding.data.repository.synopsis.FiveRepository;
 import com.springboot.anding.data.repository.synopsis.TenRepository;
 import com.springboot.anding.service.StarService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StarServiceImpl implements StarService {
@@ -57,6 +63,8 @@ public class StarServiceImpl implements StarService {
             star.setUser(user);
             star.setFive(five);
             star.setStarType(StarType.FIVE);
+            star.setTitle(star.getFive().getTitle());
+            star.setCreatedAt(LocalDateTime.now());
             starRepository.save(star);
             LOGGER.info("[addStar] 단편앤딩 읽기목록 추가되었습니다. account : {}", account);
             return true;
@@ -82,6 +90,8 @@ public class StarServiceImpl implements StarService {
             star.setUser(user);
             star.setTen(ten);
             star.setStarType(StarType.TEN);
+            star.setTitle(star.getTen().getTitle());
+            star.setCreatedAt(LocalDateTime.now());
             starRepository.save(star);
             LOGGER.info("[addStar] 중편앤딩 읽기목록 추가되었습니다. account : {}", account);
             return true;
@@ -106,11 +116,38 @@ public class StarServiceImpl implements StarService {
             star.setUser(user);
             star.setFifteen(fifteen);
             star.setStarType(StarType.FIFTEEN);
+            star.setCreatedAt(LocalDateTime.now());
+            star.setTitle(star.getFifteen().getTitle());
             starRepository.save(star);
+
             LOGGER.info("[addStar] 장편앤딩 읽기목록 추가되었습니다. account : {}", account);
             return true;
         }
     }
+    @Override
+    public ResponseStarListDto getTop4RecentStar(HttpServletRequest httpServletRequest) {
+        ModelMapper mapper = new ModelMapper();
+        List<ResponseStarDto> responseStarDtoList = new ArrayList<>();
+        ResponseStarListDto responseStarListDto = new ResponseStarListDto();
+
+        String token = jwtTokenProvider.resolveToken(httpServletRequest);
+
+        if (jwtTokenProvider.validationToken(token)) {
+            String account = jwtTokenProvider.getUsername(token);
+            User user = userRepository.getByAccount(account);
+
+            List<Star> starList = starRepository.findTop4ByUserOrderByCreatedAtDesc(user);
+            for (Star star : starList) {
+                ResponseStarDto responseStarDto = mapper.map(star, ResponseStarDto.class);
+                responseStarDto.setTitle(star.getTitle());
+                responseStarDtoList.add(responseStarDto);
+            }
+            responseStarListDto.setItems(responseStarDtoList);
+        }
+        return responseStarListDto;
+    }
+
+
     /*@Override
     public long countStarForStory5(Long story5Id) {
         Story5 story5 = story5Repository.findById(story5Id)

@@ -12,6 +12,8 @@ public class ResponseStarDto {
     private Long fiveId;
     private Long tenId;
     private Long fifteenId;
+    private String createdAt;
+    private String title;
     private Long uid;
 
 }
