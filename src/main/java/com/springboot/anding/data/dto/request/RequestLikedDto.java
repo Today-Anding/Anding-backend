@@ -11,4 +11,7 @@ public class RequestLikedDto {
     private Long fiveId;
     private Long tenId;
     private Long fifteenId;
+    private Long story5Id;
+    private Long story10Id;
+    private Long story15Id;
 }

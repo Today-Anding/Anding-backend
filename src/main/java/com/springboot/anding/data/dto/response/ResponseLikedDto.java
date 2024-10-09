@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseLikedDto {
-    private Long LikedId;
+    private Long likedId;
     private Long fiveId;
     private Long tenId;
     private Long fifteenId;
+    private Long story5Id;
+    private Long story10Id;
+    private Long story15Id;
     private String title;
+    private String writer;
     private Long uid;
 }

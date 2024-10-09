@@ -49,4 +49,36 @@ public class LikedController {
             return ResponseEntity.status(HttpStatus.OK).body("장편앤딩 좋아요가 삭제되었습니다.");
         }
     }
+
+    @PostMapping("/createLikedForWriter/story5")
+    public ResponseEntity<String> addLikeForWriter5(@RequestBody RequestLikedDto requestLikedDto, HttpServletRequest request) throws Exception {
+        boolean likedAdded = likedService.addLikeForWriterForStory5(requestLikedDto, request);
+        if (likedAdded) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("단편작가 좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("단편작가 좋아요가 삭제되었습니다.");
+        }
+    }
+
+    @PostMapping("/createLikedForWriter/story10")
+    public ResponseEntity<String> addLikeForWriter10(@RequestBody RequestLikedDto requestLikedDto, HttpServletRequest request) throws Exception {
+        boolean likedAdded = likedService.addLikeForWriterForStory10(requestLikedDto, request);
+        if (likedAdded) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("중편작가 좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("단편작가 좋아요가 삭제되었습니다.");
+        }
+    }
+
+    @PostMapping("/createLikedForWriter/story15")
+    public ResponseEntity<String> addLikeForWriter15(@RequestBody RequestLikedDto requestLikedDto, HttpServletRequest request) throws Exception {
+        boolean likedAdded = likedService.addLikeForWriterForStory15(requestLikedDto, request);
+        if (likedAdded) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("장편작가 좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("장편작가 좋아요가 삭제되었습니다.");
+        }
+    }
+
+
 }

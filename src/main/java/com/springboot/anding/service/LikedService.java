@@ -10,4 +10,11 @@ public interface LikedService {
     boolean addLikeForTen(RequestLikedDto requestLikedDto, HttpServletRequest servletRequest) throws Exception;
 
     boolean addLikeForFifteen(RequestLikedDto requestLikedDto, HttpServletRequest servletRequest) throws Exception;
+
+    boolean addLikeForWriterForStory5(RequestLikedDto requestLikedDto, HttpServletRequest servletRequest) throws Exception;
+
+
+    boolean addLikeForWriterForStory10(RequestLikedDto requestLikedDto, HttpServletRequest servletRequest) throws Exception;
+
+    boolean addLikeForWriterForStory15(RequestLikedDto requestLikedDto, HttpServletRequest servletRequest) throws Exception;
 }
