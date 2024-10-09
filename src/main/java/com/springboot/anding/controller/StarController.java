@@ -22,7 +22,7 @@ public class StarController {
     private StarService starService;
 
     @PostMapping("/createStar/five")
-    public ResponseEntity<String> createStarForStory5(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
+    public ResponseEntity<String> createStarForFive(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
         boolean isStarAdded = starService.addStarForFive(requestStarDto, servletRequest);
         if (isStarAdded) {
             return ResponseEntity.status(HttpStatus.OK).body("단편앤딩 읽기목록 추가되었습니다.");
@@ -32,7 +32,7 @@ public class StarController {
     }
 
     @PostMapping("/createStar/ten")
-    public ResponseEntity<String> createStarForStory10(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
+    public ResponseEntity<String> createStarForTen(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
         boolean isStarAdded = starService.addStarForTen(requestStarDto, servletRequest);
         if (isStarAdded) {
             return ResponseEntity.status(HttpStatus.OK).body("중편앤딩 읽기목록 추가되었습니다.");
@@ -42,7 +42,7 @@ public class StarController {
     }
 
     @PostMapping("/createStar/fifteen")
-    public ResponseEntity<String> createStarForStory15(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
+    public ResponseEntity<String> createStarForFifteen(@RequestBody RequestStarDto requestStarDto, HttpServletRequest servletRequest) throws Exception {
         boolean isStarAdded = starService.addStarForFifteen(requestStarDto, servletRequest);
         if (isStarAdded) {
             return ResponseEntity.status(HttpStatus.OK).body("장편앤딩 읽기목록 추가되었습니다.");
