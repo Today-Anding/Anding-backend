@@ -2,17 +2,17 @@ package com.springboot.anding.controller;
 
 import com.springboot.anding.data.dto.request.RequestLikedDto;
 import com.springboot.anding.data.dto.request.RequestStarDto;
+import com.springboot.anding.data.dto.response.ResponseLikedDto;
+import com.springboot.anding.data.entity.LikeType;
 import com.springboot.anding.service.LikedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/liked")
@@ -69,6 +69,15 @@ public class LikedController {
             return ResponseEntity.status(HttpStatus.OK).body("단편작가 좋아요가 삭제되었습니다.");
         }
     }
+    @PostMapping("/createLikedForWriter/story101")
+    public ResponseEntity<String> addLikeForWriter101(@RequestBody RequestLikedDto requestLikedDto, HttpServletRequest request) throws Exception {
+        boolean likedAdded = likedService.addLikeForWriterForStory10(requestLikedDto, request);
+        if (likedAdded) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("중편작가 좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("단편작가 좋아요가 삭제되었습니다.");
+        }
+    }
 
     @PostMapping("/createLikedForWriter/story15")
     public ResponseEntity<String> addLikeForWriter15(@RequestBody RequestLikedDto requestLikedDto, HttpServletRequest request) throws Exception {
@@ -79,6 +88,9 @@ public class LikedController {
             return ResponseEntity.status(HttpStatus.OK).body("장편작가 좋아요가 삭제되었습니다.");
         }
     }
-
+    @GetMapping("/top-liked-entities")
+    public List<ResponseLikedDto> getTopLikedEntities(@RequestParam LikeType likeType) {
+        return likedService.getTopLikedEntities(likeType);
+    }
 
 }
